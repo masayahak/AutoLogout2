@@ -25,6 +25,14 @@ namespace AutoLogout.Controls
                 if (f != loginForm)
                     f.Close();
             }
+
+            // 最終操作時刻を現在時刻に更新（再スタート時の即タイムアウトを防ぐ）
+            UserActivityTracker.Update();
+
+            InactivityMonitorManager.Start(
+                Program.InactivityCheckIntervalSeconds,
+                Program.InactivityTimeout
+            );
         }
     }
 

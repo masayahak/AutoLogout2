@@ -6,6 +6,13 @@ namespace AutoLogout
     {
         public static Controls.MyAppContext? AppContextInstance { get; private set; }
 
+#if DEBUG
+        public const int InactivityCheckIntervalSeconds = 1;    // 1秒おきに確認
+        public static readonly TimeSpan InactivityTimeout = TimeSpan.FromSeconds(30);  // 30秒でタイムアウト
+#else
+        public const int InactivityCheckIntervalSeconds = 10;
+        public static readonly TimeSpan InactivityTimeout = TimeSpan.FromMinutes(30);
+#endif
         [STAThread]
         static void Main()
         {
@@ -15,14 +22,8 @@ namespace AutoLogout
             var loginForm = new FormLogin();
             AppContextInstance = new MyAppContext(loginForm);
 
-#if DEBUG
-            var interval = 1; // 1秒おきに確認
-            var timeout = TimeSpan.FromSeconds(30);  // 30秒でタイムアウト
-#else
-            var interval = 10; // 10秒おきに確認
-            var timeout = TimeSpan.FromMinutes(30);  // 30分でタイムアウト
-#endif
-            _ = new InactivityMonitor(interval, timeout);
+            // 起動時に1回だけ監視を開始
+            InactivityMonitorManager.Start(InactivityCheckIntervalSeconds, InactivityTimeout);
 
             Application.Run(AppContextInstance);
         }
