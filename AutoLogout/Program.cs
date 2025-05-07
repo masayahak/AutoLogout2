@@ -8,7 +8,7 @@ namespace AutoLogout
 
 #if DEBUG
         public const int InactivityCheckIntervalSeconds = 1;    // 1秒おきに確認
-        public static readonly TimeSpan InactivityTimeout = TimeSpan.FromSeconds(30);  // 30秒でタイムアウト
+        public static readonly TimeSpan InactivityTimeout = TimeSpan.FromSeconds(20);  // 20秒でタイムアウト
 #else
         public const int InactivityCheckIntervalSeconds = 10;
         public static readonly TimeSpan InactivityTimeout = TimeSpan.FromMinutes(30);

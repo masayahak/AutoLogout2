@@ -10,6 +10,8 @@ namespace AutoLogout.Controls
         private readonly int _interval;
         private readonly TimeSpan _timeout;
 
+        private static bool _filterAdded = false;
+
         public InactivityMonitor(int interval, TimeSpan timeout)
         {
             _timeout = timeout;
@@ -20,7 +22,17 @@ namespace AutoLogout.Controls
             _timer.Tick += (s, e) => CheckTimeout();
             _timer.Start();
 
-            Application.AddMessageFilter(new UserActivityMessageFilter());
+            // フィルターは一度だけ登録する
+            if (!_filterAdded)
+            {
+                Application.AddMessageFilter(new UserActivityMessageFilter());
+                _filterAdded = true;
+            }
+        }
+
+        public void Stop ()
+        {
+            _timer.Stop();
         }
 
         private void CheckTimeout()
